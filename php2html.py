@@ -54,8 +54,6 @@ dest=""
 #########################################################################################################
 
 print (platform.system()+"\n"+platform.release());
-#mmap is used to read whole file in a variable, this is not memory efficient
-#Other way of doing this, should be added as an alternative mode of operation
 
 #########################################################################################################
 
