@@ -12,11 +12,11 @@ The system on which this tool will be run, must have PHP installed. It executes 
 #Install:
 
 The script can be run without installing if python3.4 is available:
-    python3.4 php2html.py options
+      python3.4 php2html.py options
 
 The tool can be installed by running the install file provided in any Linux System.
-    chmod +x install
-    ./install   //or simply drag and drop the file on terminal
+      chmod +x install
+      ./install   //or simply drag and drop the file on terminal
 
 #How to use:
 
