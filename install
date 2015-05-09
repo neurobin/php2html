@@ -1,0 +1,8 @@
+#!/bin/sh
+BASEDIR=`dirname "${0}"`
+cd "$BASEDIR"
+sudo cp -Rf php2html /usr/share/
+sudo chmod -R 755 /usr/share/php2html
+sudo ln -sf /usr/share/php2html/php2html /usr/bin/php2html
+echo "Installation Finished"
+
