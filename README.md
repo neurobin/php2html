@@ -44,7 +44,7 @@ The tool can be installed by running the install file provided in any Linux Syst
 
 #Disclaimer:
 
-This project emerged from personal needs. I like to write webpages with PHP and I host most of my project related pages on github and I don't want to write my codes with Jekyll. That's the reason I wrote this script to do the convertion from PHP to HTML for me. So this may not meet the standard needs of most PHP developers out there. And it comes with a copy of GPL v3 License with no warranty of any kind, so use with care.
+This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the reason I wrote this script on the first place, to do the convertion from PHP to HTML for me. So this may not meet the standard needs of most of the PHP web developers out there. It comes with a copy of GPL v3 License with no warranty of any kind, so use with care.
 
 
 #Contrubute:
