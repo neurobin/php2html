@@ -22,7 +22,7 @@ The tool can be installed by running the install file provided, in any Linux Sys
       ./install   //or simply drag and drop the file on terminal
 ###On Windows:
 
-For windows, a setup.exe file is provided. Run it to install. 
+For windows, a setup.exe file is provided. Run it to install. You might need to reboot once after completing installation to use it from commmand line. No reboot is needed to run it from desktop launcher.
 
 ##How to use:
 
