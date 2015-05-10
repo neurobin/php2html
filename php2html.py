@@ -351,7 +351,7 @@ def runPHP(src):
 
 #########################################################################################################
 def copy(src, dest):
-    if(verbose):print("*****Staring to copy files.....")
+    if(verbose):print("*****Starting to copy files.....")
     try:
         shutil.copytree(src, dest)
     except OSError as e:
@@ -365,7 +365,7 @@ def copy(src, dest):
             
             
 def copyOver(src, dest):
-    if(verbose):print("*****Staring to copy files.....")
+    if(verbose):print("*****Starting to copy files.....")
     try:
         distutils.dir_util.copy_tree(src, dest)
     except OSError as e:
