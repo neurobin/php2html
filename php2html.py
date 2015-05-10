@@ -41,17 +41,58 @@ and complete HTML by replacing markups as needed.
 #########################################################################################################
 
 import os,re,sys,unicodedata,platform,subprocess,shutil,errno,distutils.dir_util
+import imp,readline
 
+
+
+#########################################################################################################
+histfile = os.path.join(os.path.expanduser("~"), ".Neurobin_hist")
+try:
+    readline.read_history_file(histfile)
+except IOError:
+    pass
+import atexit
+atexit.register(readline.write_history_file, histfile)
+del histfile
 #########################################################################################################
 
 ##Global Variables:
 
 src=""
 dest=""
+###Options
+showversion=False
 verbose=True
 overwrite=False
 inplace=False
+###
+###Default PHP command
 phpCommand="php"
+###
+productVersion="2.1.1"
+
+#########################################################################################################
+
+
+
+
+
+#########################################################################################################
+def showVersionInfo():
+    print("""Name: php2html
+Version: """+productVersion+"""
+Description: PHP To HTML Converter
+Categories: Development
+Author: Neurobin
+AuthorFullName: Jahidul Hamid
+Lincense: GPL v3
+Bug report URL: https://github.com/neurobin/php2html/issues""")
+
+
+
+
+
+
 
 #########################################################################################################
 
@@ -62,13 +103,11 @@ phpCommand="php"
 #########################################################################################################
 def parseLinuxHome(path):
     if(platform.system()=="Linux"):
-       #print("reached");
        pattern=re.compile("~.*");
        if(pattern.match(path)):
           from os.path import expanduser;
           home = expanduser("~");
           path=home+path[1:];
-          #print("*****Path: "+path+"*****");
     return path;
 #########################################################################################################
 
@@ -81,11 +120,20 @@ def parseLinuxHome(path):
 def parseArgs():
   global src,dest,verbose,overwrite,inplace
   count=0
+#########################################################
+
   #Exclusive for loop, trying to find VIP options
   for i in range(len(sys.argv)):
     if(sys.argv[i]=="-h" or sys.argv[i]=="--help"):
         help()
         sys.exit()
+  for i in range(len(sys.argv)):
+    if(sys.argv[i]=="-v" or sys.argv[i]=="--version"):
+        showVersionInfo()
+        sys.exit()
+#########################################################
+
+#########################################################
   #Trying to find general options 
   for i in range(len(sys.argv)):
         
@@ -118,7 +166,7 @@ def parseArgs():
         if os.path.exists(dest):
             print("Error: Destination directory exists")
             dest=""
-
+#########################################################
 
 
 #########################################################################################################
@@ -129,12 +177,12 @@ def parseArgs():
 def help():
    print("""\n\n*******************************************
    
-   php2html : version 2.0
+   php2html : Version """+productVersion+"""
    
    Usage: php2html [options]
    
    options are optional
-   options: src dest -q -h --help -o --inplace
+   options: src dest -q -h --help -o --inplace -v --version
    
    src is the source path
    
@@ -157,6 +205,8 @@ def help():
    neither it will prompt for it, and if dest is given as
    command line argument, it will simply ignore that
    
+   -v or --version shows version information
+   
    Example:
    php2html
    php2html -q src dest
@@ -175,13 +225,7 @@ def help():
 
 #########################################################################################################
 def processHTML(data,outfilepath):
-  #with open(filepath, 'r') as file:
-    #data = mmap.mmap(file.fileno(), 0,prot=mmap.PROT_READ)
-    #file.close();
-    #data=data[0:].decode("utf-8");
     data=data.encode("unicode-escape");
-    #print(data);
-    #print(line.decode("unicode-escape"));
     out= re.findall( b"<[\s\\\\t\\\\n]*a[\s\\\\t\\\\n]+[][\\\\\s\w\\\\./+@\"'=:,;~&^$-]*[\s\\\\t\\\\n]*href[\s\\\\t\\\\n]*=[\s\\\\t\\\\n]*\"[\s\\\\t\\\\n]*(?!http://)(?!www.)[][\\\\\s\w\\\\./+@\"':,;~&^$-]+\.php", data);
     data=data.decode("unicode-escape");
     if out:
@@ -191,7 +235,7 @@ def processHTML(data,outfilepath):
          newstring=string[0:len(string)-3]+"html";
          data=data.replace(string,newstring)
          #print(data);
-      if(verbose):print("*****HTML Parsing: Success!****")
+      if(verbose):print("*****HTML Parsing: Success *****")
     else:
       if(verbose):print("*****HTML Parsing: Everythings OK..Nothing to be done!!...skipped...");
     outfile=open(outfilepath,"w");
@@ -244,7 +288,7 @@ def checkDefaultPHP():
 def getCustomPHPCommand():
     print("-----PHP wasn't found on this system-----")
     while True:
-        path=input("Enter php executable path: ")
+        path=input("Enter PHP executable path: ")
         if os.path.exists(path):
             if not os.path.isdir(path):
                 path=os.path.abspath(path)
@@ -265,11 +309,11 @@ def getPHPCommandBySearch():
         for root, dirs, files in os.walk(os.path.abspath(os.sep)):
             if ":\\Users" in root:
                 continue
-            if(verbose):print("searching on: ", root)
+            if(verbose):print("Searching on: ", root)
 
             if lookfor in files:
                 phpCommand=os.path.join(root, lookfor)
-                if(verbose):print("\n\n*****found: "+phpCommand)
+                if(verbose):print("\n\n*****Found: "+phpCommand)
                 if(verbose):
                     print("You need to confirm that the php path is correct")
                     if not getYesNo():
@@ -281,11 +325,14 @@ def getPHPCommandBySearch():
         for root, dirs, files in os.walk(os.path.abspath(os.sep)):
             if lookfor in files:
                 phpCommand=os.path.join(root, lookfor)
-                print("\n\n*****found: "+phpCommand)
+                print("\n\n*****Found: "+phpCommand)
                 print("You need to confirm that the php path is correct")
                 if not getYesNo():
                         phpCommand=getCustomPHPCommand()
-                break   
+                break 
+                
+    if(phpCommand==""):
+        phpCommand=getCustomPHPCommand()
 
             
 def getPHPCommand():
@@ -326,7 +373,7 @@ def getPHPCommand():
 def runPHP(src):
     global phpCommand
     if not "php" in phpCommand:
-        print("Error: PHP command isn't valid")
+        print("Error: PHP command isn't valid, Exiting..")
         sys.exit()
     if(src[len(src)-4:]==".php"):
         src=os.path.abspath(src)
@@ -335,7 +382,7 @@ def runPHP(src):
         proc = subprocess.Popen(phpCommand+" "+src, shell=True, stdout=subprocess.PIPE)
         output = proc.stdout.read().decode("utf-8")
         if(output!=""):
-            if(verbose):print("*****Running PHP: Success*****")
+            if(verbose):print("*****Running PHP: Success *****")
         else:
             if(verbose):print("-----PHP failed!! or returned an empty result-----")
         processHTML(output,dest)
@@ -384,13 +431,14 @@ def copyOver(src, dest):
 #########################################################################################################
 
 def clean(dest):
-  if(verbose):print("\n\n*****Cleaning....\n\n")
+  if(verbose):print("\n*****Cleaning*****")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
             filepath=os.path.join(subdir, file)
             filepath=os.path.abspath(filepath)
             os.remove(filepath)
+  if(verbose):print("*****done*****")
 
 
 
@@ -450,11 +498,7 @@ def startConvert(dest):
             filepath=os.path.join(subdir, file)
             subdir=os.path.abspath(subdir)
             filepath=os.path.abspath(filepath)
-            #print (filepath)
-            #html=filepath[0:len(filepath)-3]+"html"
-            #os.chdir(subdir)
             runPHP(filepath)
-            #print(html);
             os.chdir(dest)
              
 
@@ -500,7 +544,7 @@ getPHPCommand()
 
 if(verbose):
     print ("\n\n******Operating System: "+platform.system()+"\n******Release: "+platform.release());
-    print("""\n\n****************php2html: version 2.0**********************
+    print("""\n\n****************php2html: Version """+productVersion+""" **********************
 **************************Lexicon**************************
 ***** means Success message
 ----- means Warning message
@@ -534,16 +578,3 @@ if not isSingleMode():
 else:
     #if single file mode is true:
     runPHP(src)
-
-
-
-
-
-
-
-
-
-
-
-
-

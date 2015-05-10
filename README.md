@@ -31,7 +31,7 @@ Usage of this tool in windows and Linux are same. You can run it with cmd in win
      Usage: php2html [options]
    
      options are optional
-     options: src dest -q -h --help -o --inplace
+     options: src dest -q -h --help -o --inplace -v --version
    
      src is the source path
    
@@ -53,6 +53,8 @@ Usage of this tool in windows and Linux are same. You can run it with cmd in win
      in the source directory. This doesn't require the option dest,
      neither it will prompt for it, and if dest is given as
      command line argument, it will simply ignore that
+     
+     -v or --version shows version information
    
      Example:
      php2html
