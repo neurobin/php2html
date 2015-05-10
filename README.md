@@ -56,7 +56,7 @@ Usage of this tool in windows and Linux are same. You can run it with cmd in win
 This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the reason I wrote this script on the first place, to do the convertion from PHP to HTML for me. So this may not meet the standard needs of most of the PHP web developers out there. It comes with a copy of GPL v3 License with no warranty of any kind, so use with care.
 
 
-##Contrubute:
+##Contribute:
 
 If you are a developer, you can consider contributing to this project by forking this repository and making changes for better and do a pull request, or sharing ideas and suggestions or finding bugs, anything at all, what you think will be beneficial for this project.
 
