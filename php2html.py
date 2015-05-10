@@ -351,6 +351,7 @@ def runPHP(src):
 
 #########################################################################################################
 def copy(src, dest):
+    if(verbose):print("*****Staring to copy files.....")
     try:
         shutil.copytree(src, dest)
     except OSError as e:
@@ -364,6 +365,7 @@ def copy(src, dest):
             
             
 def copyOver(src, dest):
+    if(verbose):print("*****Staring to copy files.....")
     try:
         distutils.dir_util.copy_tree(src, dest)
     except OSError as e:
@@ -382,6 +384,7 @@ def copyOver(src, dest):
 #########################################################################################################
 
 def clean(dest):
+  if(verbose):print("\n\n*****Cleaning....\n\n")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
@@ -440,6 +443,7 @@ def getInput():
 #########################################################################################################          
 
 def startConvert(dest):
+  if(verbose):print("Starting convertion process.....\n\n")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
