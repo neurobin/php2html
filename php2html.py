@@ -49,6 +49,7 @@ import os,re,sys,unicodedata,platform,subprocess,shutil,errno
 src=""
 dest=""
 verbose=True
+phpCommand="php"
 
 #########################################################################################################
 
@@ -171,12 +172,130 @@ def processHTML(data,outfilepath):
          #print(data);
       if(verbose):print("*****HTML Parsing: Success!****")
     else:
-      if(verbose):print ("*****HTML Parsing: Everythings OK..Nothing to be done!!...skipped...");
+      if(verbose):print("*****HTML Parsing: Everythings OK..Nothing to be done!!...skipped...");
     outfile=open(outfilepath,"w");
-    if(verbose):print ("*****Creating file: "+outfilepath+"\n");
     outfile.write(data);
+    if(data!=""):
+        if(verbose):print("*****Created file: "+outfilepath+"\n");
+    else:
+        if(verbose):print("-----Created empty file: "+outfilepath+"\n");
     outfile.close();
 #########################################################################################################      
+
+
+
+#########################################################################################################
+
+def getYesNo():
+    yn=input("[Y/n]: ")
+    if(yn=="Y" or yn=="y"):
+        return True
+    else:
+        return False
+        
+def checkDefaultPHP():
+    global phpCommand
+    if(platform.system()!="Windows"):
+        try:
+            proc = subprocess.Popen("which"+" "+phpCommand, shell=True, stdout=subprocess.PIPE)
+            output = proc.stdout.read().decode("utf-8")
+            if(output!=""):
+                phpCommand="php"
+            else:
+                phpCommand=""
+            
+        except:
+            phpCommand=""
+            
+    if(platform.system()=="Windows"):
+        winphp=["C:\\wamp\\bin\\php\\php5.5.12\\php.exe"]
+        for i in winphp:
+            if os.path.exists(i):
+                if not os.path.isdir(i):
+                    phpCommand=i
+                    break
+                else:
+                    phpCommand=""
+            else:
+                phpCommand=""
+        
+
+def getCustomPHPCommand():
+    print("-----PHP wasn't found on this system-----")
+    while True:
+        path=input("Enter php executable path: ")
+        if os.path.exists(path):
+            if not os.path.isdir(path):
+                path=os.path.abspath(path)
+                break
+            else:
+                print("Error: This is a directory")
+                path=""
+        else:
+            print("Error: File not found")
+            path=""
+    return path
+
+def getPHPCommandBySearch():
+    global phpCommand
+    if(platform.system()=="Windows"):
+        if(verbose):print("Trying to find PHP, if installed")
+        lookfor = "php.exe"
+        for root, dirs, files in os.walk(os.path.abspath(os.sep)):
+            if ":\\Users" in root:
+                continue
+            if(verbose):print("searching on: ", root)
+
+            if lookfor in files:
+                phpCommand=os.path.join(root, lookfor)
+                if(verbose):print("\n\n*****found: "+phpCommand)
+                if(verbose):
+                    print("You need to confirm that the php path is correct")
+                    if not getYesNo():
+                        phpCommand=getCustomPHPCommand()
+                break
+    if(platform.system()!="Windows"):
+        print("Trying to find PHP, if installed")
+        lookfor = "php"
+        for root, dirs, files in os.walk(os.path.abspath(os.sep)):
+            if lookfor in files:
+                phpCommand=os.path.join(root, lookfor)
+                print("\n\n*****found: "+phpCommand)
+                print("You need to confirm that the php path is correct")
+                if not getYesNo():
+                        phpCommand=getCustomPHPCommand()
+                break   
+
+            
+def getPHPCommand():
+    global phpCommand
+    checkDefaultPHP()
+    if(phpCommand==""):
+        if(platform.system()!="Windows"):
+            print("Error: PHP wasn't found")
+            print("Want to enter PHP executable path? if not I will search for it")
+            if getYesNo():
+                phpCommand=getCustomPHPCommand()
+            else:
+                getPHPCommandBySearch()
+                
+        if(platform.system()=="Windows"):
+            if(verbose):
+                print("Error: PHP wasn't found")
+                print("Want to enter PHP executable path? if not I will search for it")
+                if getYesNo():
+                    phpCommand=getCustomPHPCommand()
+                else:
+                    getPHPCommandBySearch() 
+            if not verbose:
+                getPHPCommandBySearch()
+
+
+
+
+
+
+#########################################################################################################
   
   
   
@@ -184,17 +303,20 @@ def processHTML(data,outfilepath):
   
 #########################################################################################################  
 def runPHP(src):
+    global phpCommand
+    if not "php" in phpCommand:
+        print("Error: PHP command isn't valid")
+        sys.exit()
     if(src[len(src)-4:]==".php"):
-        
         src=os.path.abspath(src)
         dest=src[0:len(src)-3]+"html"
         os.chdir(os.path.dirname(src))
-        proc = subprocess.Popen("php "+src, shell=True, stdout=subprocess.PIPE)
+        proc = subprocess.Popen(phpCommand+" "+src, shell=True, stdout=subprocess.PIPE)
         output = proc.stdout.read().decode("utf-8")
-        #print(output);
-        #outfile=open(dest,"w");
-        #outfile.write(output);
-        if(verbose):print("*****Running PHP: Success*****")
+        if(output!=""):
+            if(verbose):print("*****Running PHP: Success*****")
+        else:
+            if(verbose):print("-----PHP failed!! or returned an empty result-----")
         processHTML(output,dest)
     else:
         if(verbose):print("-----This file is not a valid PHP file, skipped-----")
@@ -327,6 +449,12 @@ def isSingleMode():
 parseArgs()
 
 #*******************************************************************************************************#
+
+
+##Check For PHP installation
+getPHPCommand()
+
+
 
 if(verbose):
     print ("\n\n******Operating System: "+platform.system()+"\n******Release: "+platform.release());

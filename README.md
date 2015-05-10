@@ -14,13 +14,19 @@ The system on which this tool will be run, must have PHP installed. It executes 
 The script can be run without installing if python3.4 is available:
 
       python3.4 php2html.py options
+###On Linux:
 
-The tool can be installed by running the install file provided in any Linux System.
+The tool can be installed by running the install file provided, in any Linux System:
 
       chmod +x install
       ./install   //or simply drag and drop the file on terminal
+###On Windows:
+
+For windows, a setup.exe file is provided. Run it to install. 
 
 ##How to use:
+
+Usage of this tool in windows and Linux are same. You can run it with cmd in windows and with terminal emulator in Linux.
 
      Usage: php2html [options]
    
@@ -43,6 +49,7 @@ The tool can be installed by running the install file provided in any Linux Syst
      php2html -q src dest
      php2html src -q dest
      php2html src dest -q
+     or if you are in windows, simply run the desktop launcher
 
 ##Disclaimer:
 
