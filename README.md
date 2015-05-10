@@ -31,7 +31,7 @@ Usage of this tool in windows and Linux are same. You can run it with cmd in win
      Usage: php2html [options]
    
      options are optional
-     options: src dest -q -h --help
+     options: src dest -q -h --help -o --inplace
    
      src is the source path
    
@@ -41,14 +41,25 @@ Usage of this tool in windows and Linux are same. You can run it with cmd in win
      -q can be placed anywhere in the
      argument sequence.
    
-     -h shows help menu
-     --help shows help menu
+     -h shows this help menu
+     --help shows this help menu
+   
+     -o overwrites destination directory
+     This mode is not dependent on the existance of destination
+     directory
+   
+     --inplace is a dangerous option and should be avoided
+     This replaces all the PHP files to resulting HTML file
+     in the source directory. This doesn't require the option dest,
+     neither it will prompt for it, and if dest is given as
+     command line argument, it will simply ignore that
    
      Example:
      php2html
      php2html -q src dest
      php2html src -q dest
      php2html src dest -q
+     php2html src dest -q -o
      or if you are in windows, simply run the desktop launcher
 
 ##Disclaimer:
