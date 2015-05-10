@@ -24,7 +24,7 @@ The tool can be installed by running the install file provided, in any Linux Sys
       
 ###On Windows:
 
-For windows, a setup.exe file is provided which can be run to install it. You might need to reboot once, after completing installation to use it from commmand prompt (cmd). No reboot is needed to run it from desktop launcher.
+For windows, a setup.exe file is provided which can be run to install it. You might need to reboot once after completing installation, to use it from commmand prompt (cmd). No reboot is needed to run it from desktop launcher.
 
 ##How to use:
 
