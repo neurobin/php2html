@@ -40,7 +40,7 @@ and complete HTML by replacing markups as needed.
 
 #########################################################################################################
 
-import os,re,sys,unicodedata,platform,subprocess,shutil,errno
+import os,re,sys,unicodedata,platform,subprocess,shutil,errno,distutils.dir_util
 
 #########################################################################################################
 
@@ -49,6 +49,8 @@ import os,re,sys,unicodedata,platform,subprocess,shutil,errno
 src=""
 dest=""
 verbose=True
+overwrite=False
+inplace=False
 phpCommand="php"
 
 #########################################################################################################
@@ -77,7 +79,7 @@ def parseLinuxHome(path):
 
 #########################################################################################################
 def parseArgs():
-  global src,dest,verbose
+  global src,dest,verbose,overwrite,inplace
   count=0
   #Exclusive for loop, trying to find VIP options
   for i in range(len(sys.argv)):
@@ -89,6 +91,14 @@ def parseArgs():
         
     if(sys.argv[i]=="-q"):
         verbose=False 
+        continue
+        
+    if(sys.argv[i]=="--inplace"):
+        inplace=True 
+        continue
+        
+    if(sys.argv[i]=="-o"):
+        overwrite=True 
         continue
     
     if(count==0 and i>0):
@@ -118,12 +128,13 @@ def parseArgs():
 
 def help():
    print("""\n\n*******************************************
-   php2html : version 1.0
+   
+   php2html : version 2.0
    
    Usage: php2html [options]
    
    options are optional
-   options: src dest -q -h --help
+   options: src dest -q -h --help -o --inplace
    
    src is the source path
    
@@ -136,13 +147,23 @@ def help():
    -h shows this help menu
    --help shows this help menu
    
+   -o overwrites destination directory
+   This mode is not dependent on the existance of destination
+   directory
+   
+   --inplace is a dangerous option and should be avoided
+   This replaces all the PHP files to resulting HTML file
+   in the source directory. This doesn't require the option dest,
+   neither it will prompt for it, and if dest is given as
+   command line argument, it will simply ignore that
+   
    Example:
    php2html
    php2html -q src dest
    php2html src -q dest
    php2html src dest -q
+   php2html src dest -q -o
    
-   For windows, php2html would be php2html.exe
 ********************************************\n""")
 
 
@@ -330,8 +351,23 @@ def runPHP(src):
 
 #########################################################################################################
 def copy(src, dest):
+    if(verbose):print("*****Staring to copy files.....")
     try:
         shutil.copytree(src, dest)
+    except OSError as e:
+        # If the error was caused because the source wasn't a directory
+        if e.errno == errno.ENOTDIR:
+            shutil.copy(src, dest)
+        else:
+            print('Error: Directory not copied. %s' % e)
+            sys.exit()
+            
+            
+            
+def copyOver(src, dest):
+    if(verbose):print("*****Staring to copy files.....")
+    try:
+        distutils.dir_util.copy_tree(src, dest)
     except OSError as e:
         # If the error was caused because the source wasn't a directory
         if e.errno == errno.ENOTDIR:
@@ -348,6 +384,7 @@ def copy(src, dest):
 #########################################################################################################
 
 def clean(dest):
+  if(verbose):print("\n\n*****Cleaning....\n\n")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
@@ -380,20 +417,24 @@ def getInput():
              break;
         else:
              print("Error: Source path doesn't exist")
-  if(dest==""):       
+  if(dest=="" and inplace==False):       
      while(True):
         dest=input("Enter destination directory: ")
         dest=dest.strip("\r\n")
         dest=parseLinuxHome(dest)
         dest=os.path.abspath(dest)
-        if not os.path.exists(dest):
-             if (dest==src):
-                 print("Error: Source and destination can't be the same")
-             else:
-                 if(verbose):print("*****Project will be saved in: "+dest);
-                 break;
+        if not overwrite:
+            if not os.path.exists(dest):
+                if (dest==src):
+                    print("Error: Source and destination can't be the same")
+                else:
+                    if(verbose):print("*****Project will be saved in: "+dest);
+                    break;
+            else:
+                print("Error: Destination directory exists")
+                
         else:
-             print("Error: Destination directory exists")
+            break
 #########################################################################################################
 
 
@@ -402,6 +443,7 @@ def getInput():
 #########################################################################################################          
 
 def startConvert(dest):
+  if(verbose):print("Starting convertion process.....\n\n")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
@@ -458,7 +500,7 @@ getPHPCommand()
 
 if(verbose):
     print ("\n\n******Operating System: "+platform.system()+"\n******Release: "+platform.release());
-    print("""\n\n****************php2html: version 1.0**********************
+    print("""\n\n****************php2html: version 2.0**********************
 **************************Lexicon**************************
 ***** means Success message
 ----- means Warning message
@@ -476,13 +518,18 @@ if not isSingleMode():
     getInput();
 
     #Copy source to destination: We will not make any cahnges to source
-    copy(src,dest)
-
-    #Start conversion process
-    startConvert(dest)
-
-    #Clean (remove php files)
-    clean(dest)
+    if not inplace:
+        if not overwrite:
+            copy(src,dest)
+        else:
+            copyOver(src,dest)
+        startConvert(dest)
+        #Clean (remove php files)
+        clean(dest)
+    #In this case we will replace source
+    else:
+        startConvert(src)
+        clean(src)
     
 else:
     #if single file mode is true:
