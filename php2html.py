@@ -166,10 +166,7 @@ def parseArgs():
         count+=1
         dest=sys.argv[i]
         dest=parseLinuxHome(dest)
-        dest=os.path.abspath(dest)      
-        if os.path.exists(dest):
-            print("Error: Destination directory exists")
-            dest=""
+        dest=os.path.abspath(dest)
 #########################################################
 
 
@@ -230,7 +227,7 @@ def help():
 #########################################################################################################
 def processHTML(data,outfilepath):
     data=data.encode("unicode-escape");
-    out= re.findall( b"<[\s\\\\t\\\\n]*a[\s\\\\t\\\\n]+[][\\\\\s\w\\\\./+@\"'=:,;~&^$-]*[\s\\\\t\\\\n]*href[\s\\\\t\\\\n]*=[\s\\\\t\\\\n]*\"[\s\\\\t\\\\n]*(?!http://)(?!www.)[][\\\\\s\w\\\\./+@\"':,;~&^$-]+\.php", data);
+    out= re.findall( b"<[\s\\\\t\\\\n]*a[\s\\\\t\\\\n]+[][\\\\\s\w\\\\./+@\"'=:,;~&^$-]*[\s\\\\t\\\\n]*href[\s\\\\t\\\\n]*=[\s\\\\t\\\\n]*\"[\s\\\\t\\\\n]*(?!http://)(?!www.)[][\\\\\s\w\\\\./+@\"':,;~%&^$-]+\.php", data);
     data=data.decode("unicode-escape");
     if out:
       for match in out:
@@ -560,6 +557,14 @@ Error: means Error
 """
 Now the main task will begin
 """
+##Check if dest is passed in command line argument, must be before getInput()
+if(os.path.isdir(dest)==True and overwrite==False ):
+    dest=""
+elif(os.path.exists(dest)):
+    if not os.path.isdir(dest):
+        print("Error: Invalid argument, Destination must be a directory...")
+        dest=""
+    
 if not isSingleMode():
     #if single file mode is false:
     #Get input from user: source path and destination path
