@@ -495,7 +495,7 @@ def getInput():
 #########################################################################################################          
 
 def startConvert(dest):
-  if(verbose):print("Starting convertion process.....\n\n")
+  if(verbose):print("Starting conversion process.....\n\n")
   for subdir, dirs, files in os.walk(dest):
     for file in files:
         if(file[len(file)-4:]==".php"):
