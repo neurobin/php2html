@@ -41,12 +41,16 @@ and complete HTML by replacing markups as needed.
 #########################################################################################################
 
 import os,re,sys,unicodedata,platform,subprocess,shutil,errno,distutils.dir_util
-import imp,readline
+import imp
+try:
+    import readline
+except ImportError:
+    import pyreadline as readline
 
 
 
 #########################################################################################################
-histfile = os.path.join(os.path.expanduser("~"), ".Neurobin_hist")
+histfile = os.path.join(os.path.expanduser("~"), ".php2html_hist")
 try:
     readline.read_history_file(histfile)
 except IOError:
@@ -398,7 +402,7 @@ def runPHP(src):
 
 #########################################################################################################
 def copy(src, dest):
-    if(verbose):print("*****Starting to copy files.....")
+    if(verbose):print("*****Copying files.....")
     try:
         shutil.copytree(src, dest)
     except OSError as e:
@@ -412,7 +416,7 @@ def copy(src, dest):
             
             
 def copyOver(src, dest):
-    if(verbose):print("*****Starting to copy files.....")
+    if(verbose):print("*****Copying files.....")
     try:
         distutils.dir_util.copy_tree(src, dest)
     except OSError as e:
