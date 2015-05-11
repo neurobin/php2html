@@ -46,10 +46,11 @@ In Windows it can be run from Desktop Launcher too.
      src is the source path
    
      dest is the destination directory
+     
+     src and dest are sequential, all other options can be placed
+     anywhere in the argument sequence
    
      -q means quite (won't print any output other than errors)
-     -q can be placed anywhere in the
-     argument sequence.
    
      -h shows this help menu
      --help shows this help menu
