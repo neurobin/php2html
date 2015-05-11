@@ -30,6 +30,8 @@ For windows, a setup.exe file is provided which can be run to install it. You mi
 
 Both Windows and Linux versions of this tool can be used the same way. It can be run with cmd in windows and with terminal emulator in Linux.
 
+In Windows it can be run from Desktop Launcher too.
+
 ###Simple Usage:
 
      php2html phpscript.php
@@ -86,7 +88,6 @@ Both Windows and Linux versions of this tool can be used the same way. It can be
      php2html src dest -q -o -a         //This one ignores any accessfile
      php2html src dest -q -o -a.config  //This one takes .config as AccessFile
      
-     or if you are in windows, simply run the desktop launcher
 
 ##Disclaimer:
 
