@@ -40,8 +40,8 @@ and complete HTML by replacing markups as needed.
 
 #########################################################################################################
 
-import os,re,sys,unicodedata,platform,subprocess,shutil,errno,distutils.dir_util
-import imp
+import os,re,sys,unicodedata,platform,subprocess,shutil,mmap
+import imp,random
 try:
     import readline
 except ImportError:
@@ -64,16 +64,30 @@ del histfile
 
 src=""
 dest=""
+
 ###Options
 showversion=False
 verbose=True
 overwrite=False
 inplace=False
+accessFile=".htaccess"
+reserveDirectoryStructure=False
+
 ###
+
 ###Default PHP command
 phpCommand="php"
+
 ###
-productVersion="2.1.1"
+productVersion="3.0.0"
+
+##
+
+##ignore directories and files, these directories and files won't be copied
+ignoreDirPatterns=[".git"]
+ignoreFilePatterns=[]
+
+##
 
 #########################################################################################################
 
@@ -122,7 +136,7 @@ def parseLinuxHome(path):
 
 #########################################################################################################
 def parseArgs():
-  global src,dest,verbose,overwrite,inplace
+  global src,dest,verbose,overwrite,inplace,reserveDirectoryStructure,accessFile
   count=0
 #########################################################
 
@@ -145,13 +159,21 @@ def parseArgs():
         verbose=False 
         continue
         
-    if(sys.argv[i]=="--inplace"):
+    if(sys.argv[i]=="-i"):
         inplace=True 
         continue
         
     if(sys.argv[i]=="-o"):
         overwrite=True 
         continue
+    if(re.match("-a",sys.argv[i])):
+        accessFile=sys.argv[i][2:]
+        continue
+        
+    if(re.match("-rd",sys.argv[i])):
+        reserveDirectoryStructure=True
+        continue
+    
     
     if(count==0 and i>0):
         count+=1;
@@ -166,10 +188,7 @@ def parseArgs():
         count+=1
         dest=sys.argv[i]
         dest=parseLinuxHome(dest)
-        dest=os.path.abspath(dest)      
-        if os.path.exists(dest):
-            print("Error: Destination directory exists")
-            dest=""
+        dest=os.path.abspath(dest)
 #########################################################
 
 
@@ -186,7 +205,7 @@ def help():
    Usage: php2html [options]
    
    options are optional
-   options: src dest -q -h --help -o --inplace -v --version
+   options: src dest -q -h --help -o -i -v --version -a.htaccess -rd
    
    src is the source path
    
@@ -203,7 +222,7 @@ def help():
    This mode is not dependent on the existance of destination
    directory
    
-   --inplace is a dangerous option and should be avoided
+   -i is a dangerous option and should be avoided
    This replaces all the PHP files to resulting HTML file
    in the source directory. This doesn't require the option dest,
    neither it will prompt for it, and if dest is given as
@@ -211,12 +230,28 @@ def help():
    
    -v or --version shows version information
    
+   -a.htaccess processes the .htaccess file.
+   Other access file can be processed by changing the
+   .htaccess part to the actual name of the used AccessFile.
+   There must not be any white space between -a and .htaccess
+   If you pass only -a, it will neither look for any AccessFile and
+   nor it will try to process them
+   
+   If you don't pass -a as an option, it will look for .htaccess file
+   by default
+   
+   -rd reserve Directory Structure. By default empty directory will not
+   be copied to the destination directory. If -rd is specified, empty directory
+   will also be copied to the destination to preserve directory structure
+   
    Example:
    php2html
    php2html -q src dest
    php2html src -q dest
    php2html src dest -q
-   php2html src dest -q -o
+   php2html src dest -q -o            #this and above takes .htaccess by default as the access file
+   php2html src dest -q -o -a         #This one ignores any accessfile
+   php2html src dest -q -o -a.config  #This one takes .config as AccessFile
    
 ********************************************\n""")
 
@@ -230,7 +265,7 @@ def help():
 #########################################################################################################
 def processHTML(data,outfilepath):
     data=data.encode("unicode-escape");
-    out= re.findall( b"<[\s\\\\t\\\\n]*a[\s\\\\t\\\\n]+[][\\\\\s\w\\\\./+@\"'=:,;~&^$-]*[\s\\\\t\\\\n]*href[\s\\\\t\\\\n]*=[\s\\\\t\\\\n]*\"[\s\\\\t\\\\n]*(?!http://)(?!www.)[][\\\\\s\w\\\\./+@\"':,;~&^$-]+\.php", data);
+    out= re.findall( b"<[\s\\\\t\\\\n]*a[\s\\\\t\\\\n]+[][\\\\\s\w\\\\./+@\"'=:,;~&^$-]*[\s\\\\t\\\\n]*href[\s\\\\t\\\\n]*=[\s\\\\t\\\\n]*\"[\s\\\\t\\\\n]*(?!http://)(?!www.)[][\\\\\s\w\\\\./+@\"':,;~%&^$-]+\.php", data);
     data=data.decode("unicode-escape");
     if out:
       for match in out:
@@ -250,6 +285,33 @@ def processHTML(data,outfilepath):
         if(verbose):print("-----Created empty file: "+outfilepath+"\n");
     outfile.close();
 #########################################################################################################      
+
+
+
+
+#########################################################################################################
+def processAccessFile(srcfile,outfilepath):
+    with open(srcfile, 'r') as f:
+        data = mmap.mmap(f.fileno(), 0,prot=mmap.PROT_READ)
+        data=data[0:].decode("utf-8")
+        out = re.findall(r"(?!http://)(?!www.)[][ \t\w\./+@\"':,;~%&^$-]+\.php", data)
+        if out:
+            for match in out:
+                string=match;
+                newstring=string[0:len(string)-3]+"html";
+                data=data.replace(string,newstring)
+            if(verbose):print("*****AccessFile Parsing: Success *****")
+        else:
+            if(verbose):print("*****AccessFile Parsing: Everythings OK..Nothing to be done!!...skipped...");
+        outfile=open(outfilepath,"w");
+        outfile.write(data);
+        if(data!=""):
+            if(verbose):print("*****Created file: "+outfilepath+"\n");
+        else:
+            if(verbose):print("-----Created empty file: "+outfilepath+"\n");
+        outfile.close();
+#########################################################################################################
+
 
 
 
@@ -374,22 +436,23 @@ def getPHPCommand():
   
   
 #########################################################################################################  
-def runPHP(src):
+def runPHP(src,dest):
     global phpCommand
     if not "php" in phpCommand:
         print("Error: PHP command isn't valid, Exiting..")
         sys.exit()
     if(src[len(src)-4:]==".php"):
         src=os.path.abspath(src)
-        dest=src[0:len(src)-3]+"html"
+        htmlfilename=os.path.basename(src)[0:len(os.path.basename(src))-3]+"html"
+        destfile=os.path.join(dest,htmlfilename)
         os.chdir(os.path.dirname(src))
         proc = subprocess.Popen(phpCommand+" "+src, shell=True, stdout=subprocess.PIPE)
         output = proc.stdout.read().decode("utf-8")
         if(output!=""):
             if(verbose):print("*****Running PHP: Success *****")
         else:
-            if(verbose):print("-----PHP failed!! or returned an empty result-----")
-        processHTML(output,dest)
+            if(verbose):print("-----Running PHP: PHP returned an empty result!!-----")
+        processHTML(output,destfile)
     else:
         if(verbose):print("-----This file is not a valid PHP file, skipped-----")
 #########################################################################################################
@@ -401,31 +464,33 @@ def runPHP(src):
 
 
 #########################################################################################################
-def copy(src, dest):
-    if(verbose):print("*****Copying files.....")
-    try:
-        shutil.copytree(src, dest)
-    except OSError as e:
-        # If the error was caused because the source wasn't a directory
-        if e.errno == errno.ENOTDIR:
-            shutil.copy(src, dest)
+
+def createEmptyTree(src, dest):
+    global ignoreDirPatterns
+    src_prefix = len(src) + len(os.path.sep)
+    for root, dirs, files in os.walk(src):
+        for pattern in ignoreDirPatterns:
+            if pattern in root:
+                break
         else:
-            print('Error: Directory not copied. %s' % e)
-            sys.exit()
+            #If the above break didn't work, this part will be executed
+            for dirname in dirs:
+                for pattern in ignoreDirPatterns:
+                    if pattern in dirname:
+                        break
+                else:
+                    #If the above break didn't work, this part will be executed
+                    dirpath = os.path.join(dest, root[src_prefix:], dirname)
+                    try:
+                        os.makedirs(dirpath,exist_ok=True)
+                    except OSError as e:
+                        print("Error: Couldn't create directory "+dirpath)
+                continue;#If the above else didn't executed, this will be reached
             
-            
-            
-def copyOver(src, dest):
-    if(verbose):print("*****Copying files.....")
-    try:
-        distutils.dir_util.copy_tree(src, dest)
-    except OSError as e:
-        # If the error was caused because the source wasn't a directory
-        if e.errno == errno.ENOTDIR:
-            shutil.copy(src, dest)
-        else:
-            print('Error: Directory not copied. %s' % e)
-            sys.exit()
+        continue;#If the above else didn't executed, this will be reached
+
+
+
 #########################################################################################################
 
 
@@ -494,16 +559,41 @@ def getInput():
 
 #########################################################################################################          
 
-def startConvert(dest):
-  if(verbose):print("Starting conversion process.....\n\n")
-  for subdir, dirs, files in os.walk(dest):
-    for file in files:
-        if(file[len(file)-4:]==".php"):
-            filepath=os.path.join(subdir, file)
-            subdir=os.path.abspath(subdir)
-            filepath=os.path.abspath(filepath)
-            runPHP(filepath)
-            os.chdir(dest)
+def startConvert(src,dest):
+    global ignoreDirPatterns,ignoreFilePatterns
+    if(verbose):print("Starting conversion process.....\n\n")
+    src_prefix = len(src) + len(os.path.sep)
+    for root, dirs, files in os.walk(src):
+        for pattern in ignoreDirPatterns:
+            if pattern in root:
+                break
+        else:
+            #If the above break didn't work, this part will be executed
+            for file in files:
+                for pattern in ignoreFilePatterns:
+                    if pattern in file:
+                        break
+                else:
+                    #If the above break didn't work, this part will be executed
+                    dirpath = os.path.join(dest, root[src_prefix:])
+                    if not reserveDirectoryStructure:
+                        try:
+                            os.makedirs(dirpath,exist_ok=True)
+                        except OSError as e:
+                            print("Error: Couldn't create directory "+dirpath)
+                    filepath=os.path.join(root,file)
+                    if(file[len(file)-4:]==".php"):
+                        filepath=os.path.abspath(filepath)
+                        runPHP(filepath,dirpath)
+                        os.chdir(dest)
+                    elif(file==accessFile):
+                        processAccessFile(filepath,os.path.join(dirpath,file))
+                    else:
+                        if(src!=dest):
+                            shutil.copy(filepath,dirpath)
+                continue;#If the above else didn't executed, this will be reached
+            
+        continue;#If the above else didn't executed, this will be reached
              
 
 
@@ -560,25 +650,27 @@ Error: means Error
 """
 Now the main task will begin
 """
+##Check if dest is passed in command line argument, must be before getInput()
+if(os.path.isdir(dest)==True and overwrite==False ):
+    dest=""
+elif(os.path.exists(dest)):
+    if not os.path.isdir(dest):
+        print("Error: Invalid argument, Destination must be a directory...")
+        dest=""
+elif(src==dest and inplace==False):
+    dest=""
+    
 if not isSingleMode():
-    #if single file mode is false:
-    #Get input from user: source path and destination path
     getInput();
+    #Create directory structure if reserveDirectoryStructure=True
+    if(reserveDirectoryStructure):createEmptyTree(src,dest)
 
-    #Copy source to destination: We will not make any cahnges to source
     if not inplace:
-        if not overwrite:
-            copy(src,dest)
-        else:
-            copyOver(src,dest)
-        startConvert(dest)
-        #Clean (remove php files)
-        clean(dest)
-    #In this case we will replace source
+        startConvert(src,dest)
     else:
-        startConvert(src)
+        startConvert(src,src)
         clean(src)
     
 else:
     #if single file mode is true:
-    runPHP(src)
+    runPHP(src,os.path.dirname(src))
