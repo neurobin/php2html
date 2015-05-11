@@ -41,7 +41,7 @@ and complete HTML by replacing markups as needed.
 #########################################################################################################
 
 import os,re,sys,unicodedata,platform,subprocess,shutil,errno,distutils.dir_util
-import imp
+import imp,random
 try:
     import readline
 except ImportError:
@@ -69,6 +69,7 @@ showversion=False
 verbose=True
 overwrite=False
 inplace=False
+accessFile=""
 ###
 ###Default PHP command
 phpCommand="php"
@@ -152,6 +153,12 @@ def parseArgs():
     if(sys.argv[i]=="-o"):
         overwrite=True 
         continue
+    if(re.match("-a",sys.argv[i])):
+        accessFile=sys.argv[i][2:]
+        if(accessFile==""):
+            accessFile=".htaccess"
+        continue
+    
     
     if(count==0 and i>0):
         count+=1;
@@ -183,7 +190,7 @@ def help():
    Usage: php2html [options]
    
    options are optional
-   options: src dest -q -h --help -o --inplace -v --version
+   options: src dest -q -h --help -o --inplace -v --version -a.htaccess
    
    src is the source path
    
@@ -208,12 +215,21 @@ def help():
    
    -v or --version shows version information
    
+   -a.htaccess processes the .htaccess file.
+   Other access files can be given by changing the
+   .htaccess part to the actual name of the used AccessFile.
+   There must not be any white space between -a and .htaccess
+   If you pass only -a, it will take .htaccess as the 
+   AccesFile name by default
+   
    Example:
    php2html
    php2html -q src dest
    php2html src -q dest
    php2html src dest -q
    php2html src dest -q -o
+   php2html src dest -q -o -a         #This one takes .htaccess
+   php2html src dest -q -o -a.config  #This one takes .config as AccessFile
    
 ********************************************\n""")
 
@@ -398,10 +414,13 @@ def runPHP(src):
 
 
 #########################################################################################################
+## Add directories to be ignored when copying...
+ignorePatterns=('.git')
+
 def copy(src, dest):
     if(verbose):print("*****Copying files.....")
     try:
-        shutil.copytree(src, dest)
+        shutil.copytree(src, dest, ignore=shutil.ignore_patterns(ignorePatterns))
     except OSError as e:
         # If the error was caused because the source wasn't a directory
         if e.errno == errno.ENOTDIR:
@@ -411,11 +430,14 @@ def copy(src, dest):
             sys.exit()
             
             
-            
+randomNumber1=random.randrange(10000,99999+1)
+randomNumber2=random.randrange(10000,99999+1)
 def copyOver(src, dest):
     if(verbose):print("*****Copying files.....")
     try:
-        distutils.dir_util.copy_tree(src, dest)
+        copy(src,str(randomNumber1)+"__Neurobin_TMP__"+str(randomNumber2))
+        distutils.dir_util.copy_tree(str(randomNumber1)+"__Neurobin_TMP__"+str(randomNumber2), dest)
+        distutils.dir_util.remove_tree(str(randomNumber1)+"__Neurobin_TMP__"+str(randomNumber2))
     except OSError as e:
         # If the error was caused because the source wasn't a directory
         if e.errno == errno.ENOTDIR:
