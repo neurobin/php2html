@@ -433,7 +433,6 @@ def copy(src, dest):
 randomNumber1=random.randrange(10000,99999+1)
 randomNumber2=random.randrange(10000,99999+1)
 def copyOver(src, dest):
-    if(verbose):print("*****Copying files.....")
     try:
         copy(src,str(randomNumber1)+"__Neurobin_TMP__"+str(randomNumber2))
         distutils.dir_util.copy_tree(str(randomNumber1)+"__Neurobin_TMP__"+str(randomNumber2), dest)
