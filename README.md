@@ -39,7 +39,7 @@ Both Windows and Linux versions of this tool can be used the same way. It can be
      php2html [options]
    
      options are optional
-     options: src dest -q -h --help -o --inplace -v --version -a -rd
+     options: src dest -q -h --help -o -i -v --version -a -rd
    
      src is the source path
    
@@ -56,13 +56,14 @@ Both Windows and Linux versions of this tool can be used the same way. It can be
      This mode is not dependent on the existance of destination
      directory
    
-     --inplace is a dangerous option and should be avoided
+     -i is a dangerous option and should be avoided
      This replaces all the PHP files to resulting HTML file
      in the source directory. This doesn't require the option dest,
      neither it will prompt for it, and if dest is given as
      command line argument, it will simply ignore that
      
      -v or --version shows version information
+     
      -a.htaccess processes the .htaccess file.
      Other access file can be processed by changing the
      .htaccess part to the actual name of the used AccessFile.
