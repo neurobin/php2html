@@ -1,8 +1,3 @@
-# php2html
-**********************
-PHP to HTML converter
-**********************
-
 This is a simple script/tool written in python (3.4) to convert PHP scripts to static HTML pages. The goal is to convert an entire PHP website residing in localhost to a static HTML website. This conversion can be done on a directory containing a website as well as on a single PHP script. Website residing in localhost isn't necessary to perform the conversion, rather it is necessary to have the PHP scripts/website locally.
 
 ##Mechanism:
@@ -92,7 +87,7 @@ In Windows it can be run from Desktop Launcher too.
 ##Limitations:
 
  1. This tool only changes the relative PHP URLs to HTML URLs, no absolute URL is changed in any ways.
- 2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`_SERVER["SELF"]`), if you are gonna use that URL in any anchor (`<a`>) tag or another JavaScript function or code snippet, otherwise it may produce unexpected results.
+ 2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`_SERVER["SELF"]`), if you are gonna use that URL in any anchor (`<a>`) tag or another JavaScript function or code snippet, otherwise it may produce unexpected results.
  3. Use relative URL path as much as you can. If any relative URL is specified with absolute path (with `http://` or `www`.) will be ignored and won't be converted to HTML URL path.
 
 ##Disclaimer:
