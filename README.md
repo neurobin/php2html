@@ -89,6 +89,11 @@ In Windows it can be run from Desktop Launcher too.
      php2html src dest -q -o -a         //This one ignores any accessfile
      php2html src dest -q -o -a.config  //This one takes .config as AccessFile
      
+##Limitations:
+
+ 1. This tool only changes the relative PHP URLs to HTML URLs, no absolute URL is changed in any ways.
+ 2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`_SERVER["SELF"]`), if you are gonna use that URL in any anchor (`<a`>) tag or another JavaScript function or code snippet, otherwise it may produce unexpected results.
+ 3. Use relative URL path as much as you can. If any relative URL is specified with absolute path (with `http://` or `www`.) will be ignored and won't be converted to HTML URL path.
 
 ##Disclaimer:
 
@@ -101,8 +106,9 @@ It comes with a copy of GPL v3 License with no warranty of any kind, so use with
 
 If you are a developer, you can consider contributing to this project by forking this repository and making changes for better and do a pull request, or sharing ideas and suggestions or finding bugs, anything at all, what you think will be beneficial for this project.
 
-If you aren't a developer, but still want to contribute, then you can support the contributing developers spiritually, by starring the repository and sharing ideas. If you want to be notified of the continuous development, you can add this in your watch list in github.
+If you aren't a developer, but still want to contribute, then you can support the contributing developers spiritually, by starring the repository and sharing ideas. If you want to be notified of the continuous development, you can add this in your watch list in Github.
 
-If you find any problems or bugs please open an issue at https://github.com/neurobin/php2html/issues
+If you find any problems or bugs please open an issue [here](https://github.com/neurobin/php2html/issues) 
+
 
 
