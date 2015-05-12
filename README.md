@@ -87,8 +87,8 @@ In Windows it can be run from Desktop Launcher too.
 ##Limitations:
 
  1. This tool only changes the relative PHP URLs to HTML URLs, no absolute URL is changed in any ways.
- 2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`_SERVER["SELF"]`), if you are gonna use that URL in any anchor (`<a>`) tag or another JavaScript function or code snippet, otherwise it may produce unexpected results.
- 3. Use relative URL path as much as you can. If any relative URL is specified with absolute path (with `http://` or `www`.) will be ignored and won't be converted to HTML URL path.
+ 2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`_SERVER["SELF"]`), if you are gonna use that URL in any link which you need to be converted to html link, otherwise it may produce unexpected results.
+ 3. Use relative URL path as much as you can. If any relative URL is specified with absolute path (with `http://` or `www`.), it will be ignored and won't be converted to HTML URL path.
 
 ##Disclaimer:
 
