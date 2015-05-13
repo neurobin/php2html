@@ -15,7 +15,7 @@ The script can be run without installing if python3.4 is available:
 The tool can be installed by running the install file provided, in any Linux System:
 
       chmod +x install
-      ./install   //or simply drag and drop the file on terminal
+      ./install   #or simply drag and drop the file on terminal
       
 ###On Windows:
 
