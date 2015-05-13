@@ -75,7 +75,8 @@ In Windows it can be run from Desktop Launcher too.
 >-rd reserve Directory Structure. By default empty directory will not
 >be copied to the destination directory. If -rd is specified, empty directory
 >will also be copied to the destination to preserve directory structure
->    
+
+
 ###Example:
 ```
 php2html
