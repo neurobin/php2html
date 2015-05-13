@@ -76,13 +76,15 @@ In Windows it can be run from Desktop Launcher too.
 >be copied to the destination directory. If -rd is specified, empty directory
 >will also be copied to the destination to preserve directory structure
 >    
->Example:
->php2html
->php2html -q src dest
->php2html src -q dest
->php2html src dest -q -o            //this and above takes .htaccess by default as the access file
->php2html src dest -q -o -a         //This one ignores any accessfile
->php2html src dest -q -o -a.config  //This one takes .config as AccessFile
+###Example:
+```
+php2html
+php2html -q src dest
+php2html src -q dest
+php2html src dest -q -o            #this and above takes .htaccess by default as the access file
+php2html src dest -q -o -a         #This one ignores any accessfile
+php2html src dest -q -o -a.config  #This one takes .config as AccessFile
+```
 
      
 ##Limitations:
