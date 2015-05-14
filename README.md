@@ -7,9 +7,9 @@ The system on which this tool will be run, must have PHP installed. It executes 
 ##Install:
 
 The script can be run without installing if python3.4 is available:
-
-      python3.4 php2html.py options
-      
+```bash
+python3.4 php2html.py options
+```
 ###On Linux:
 
 The tool can be installed by running the install file provided, in any Linux System:
@@ -28,9 +28,9 @@ Both Windows and Linux versions of this tool can be used the same way. It can be
 In Windows it can be run from Desktop Launcher too.
 
 ###Simple Usage:
-
-     php2html phpscript.php
-
+```bash
+php2html phpscript.php
+```
 ###Advanced Usage: 
 
 >php2html [options]
