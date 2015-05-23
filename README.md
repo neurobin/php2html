@@ -75,7 +75,7 @@ nor it will try to process them
 by default
     
 >-rd reserve Directory Structure. By default empty directory will not
-be copied to the destination directory. If -rd is specified, empty directory
+be copied to the destination directory. But if -rd is specified, empty directory
 will also be copied to the destination to preserve directory structure
 
 
@@ -101,7 +101,7 @@ php2html src dest -q -o -a.config  #This one takes .config as AccessFile
 
 This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the main reason I wrote this script on the first place, to do the conversion from PHP to HTML. So this may not meet the standard needs of most of the PHP web developers out there.
 
-It comes with a copy of GPL v3 License with no warranty of any kind, so use with care.
+It comes with a copy of <span class="quote">GPL v3 License</span> with no warranty of any kind, so use with care.
 
 
 ##Contribute:
