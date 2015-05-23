@@ -543,7 +543,7 @@ def getInput():
         if not overwrite:
             if not os.path.exists(dest):
                 if (dest==src):
-                    print("Error: Source and destination can't be the same")
+                    print("Error: Source and destination can't be the same\n Use -i option if you want to replace/overwrite source")
                 else:
                     if(verbose):print("*****Project will be saved in: "+dest);
                     break;
@@ -551,7 +551,10 @@ def getInput():
                 print("Error: Destination directory exists")
                 
         else:
-            break
+            if (dest==src):
+                print("Error: Source and destination can't be the same\nUse -i option if you want to replace/overwrite source")
+            else:
+                break
 #########################################################################################################
 
 
@@ -657,7 +660,7 @@ elif(os.path.exists(dest)):
     if not os.path.isdir(dest):
         print("Error: Invalid argument, Destination must be a directory...")
         dest=""
-elif(src==dest and inplace==False):
+if(src==dest and inplace==False):
     dest=""
     
 if not isSingleMode():
