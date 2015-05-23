@@ -2,7 +2,7 @@ This is a simple script/tool written in **python (3.4)** to convert PHP scripts 
 
 ##Mechanism:
 
-The system on which this tool will be run, must have PHP installed. It executes every PHP script with the system PHP environment and parses the output to replace markups as required and produces <span class="quote">.html</quote> for each <span class="quote">.php</quote>.
+The system on which this tool will be run, must have PHP installed. It executes every PHP script with the system PHP environment and parses the output to replace markups as required and produces <span class="quote">.html</span> for each <span class="quote">.php</span>.
 
 ##Install:
 
