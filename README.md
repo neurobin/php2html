@@ -89,6 +89,8 @@ options: src dest -q -h --help -o -i -v --version -a.htaccess -rd
    
 `-ef`         : Exclude file. The file specified by this option won't be included in new html site.
    
+<div id="example"></div>
+
 ```
 Example:
 php2html
@@ -99,18 +101,6 @@ php2html src.php dest -q
 php2html src.php dest -q -o            # This and above takes .htaccess by default as the access file
 php2html src.php dest -q -o -a         # This one ignores any accessfile
 php2html src.php dest -q -o -a.config  # This one takes .config as AccessFile
-```
-
-<div id="example"></div>
-###Example:
-
-```bash
-php2html
-php2html -q src dest
-php2html src -q dest
-php2html src dest -q -o            #this and above takes .htaccess by default as the access file
-php2html src dest -q -o -a         #This one ignores any accessfile
-php2html src dest -q -o -a.config  #This one takes .config as AccessFile
 ```
 
 <div id="limitations"></div>
