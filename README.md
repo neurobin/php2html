@@ -30,7 +30,7 @@ For windows, You can rename the file with a `.py` extension and run it within py
 <div id="how-to-use"></div>
 ##How to use:
 
-Both Windows and Linux versions of this tool can be used the same way (In windows make sure to add the executable in a path in the PATH environment variable). It can be run with cmd in windows and with terminal emulator in Linux.
+Both Windows and Linux versions of this tool can be used the same way (In windows make sure to add the executable path in the PATH environment variable). It can be run with cmd in windows and with terminal emulator in Linux.
 
 
 ###Simple Usage:
@@ -38,7 +38,7 @@ Both Windows and Linux versions of this tool can be used the same way (In window
 php2html phpscript.php
 php2html . destination_directory  # This will convert entire site in current directory to html
 ```
-Always run this command from within the Document Root of your website, otherwise unexpected results might occur.
+>Always run this command from within the Document Root of your website (`public_html` or `www` or whatever it is), otherwise unexpected results might occur.
 
 ###Advanced Usage: 
 
@@ -76,8 +76,7 @@ options: src dest -q -h --help -o -i -v --version -a.htaccess -rd
                 .htaccess part to the actual name of the used AccessFile.
                  There must not be any white space between -a and .htaccess
                  If you pass only -a, it will neither look for any AccessFile and
-                 nor it will try to process them
-   
+                 nor it will try to process them.
                  If you don't pass -a as an option, it will look for .htaccess file
                  by default
    
@@ -122,7 +121,11 @@ php2html src dest -q -o -a.config  #This one takes .config as AccessFile
  3. If you want to use PHP variables: `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` see the <a href="#tips-and-trics">tips & tricks</a> section.
  4. Use relative URL path as much as you can. If any relative URL is specified with absolute path (with `http://` or `www`.), it will be ignored and won't be converted to HTML URL path.
 
+
+
 <div id="tips-and-trics"></div>
+##Tips & Trics:
+
 If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a page, add the following lines at the top of the page:
 
 ```
