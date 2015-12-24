@@ -119,18 +119,21 @@ php2html src.php dest -q -o -a.config  # This one takes .config as AccessFile
 If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a page, add the following lines at the top of the page:
 
 ```
-<?php
+<?php 
+error_reporting(E_ERROR | E_PARSE);
 chdir(rtrim(dirname($_SERVER['PHP_SELF']),'/')); 
-//The above must stay at the top most line of the page. ignore any warning/error by this line of code (if any).
+//These pieces of codes must be the top most lines of the page.
    $__CURDIR=dirname($_SERVER['PHP_SELF']);
    $__SELF=basename($_SERVER['PHP_SELF']);
    $pat='/(\/|^)[^\/]*/';
    $__CURDIR = preg_replace('/^\.\//', '', $__CURDIR);
    $__CURDIR = preg_replace('/^\//', '', $__CURDIR);
-   if($__CURDIR=='.'||$__CURDIR=='./'||$__CURDIR=='/'||$__CURDIR==''){$__RDOCROOT='./';$__CURDIR='./';}
-   else {$__RDOCROOT = preg_replace($pat,'../',$__CURDIR);$__CURDIR=$__RDOCROOT.$__CURDIR;}
+   if($__CURDIR=='.'||$__CURDIR=='./'||$__CURDIR=='/'||$__CURDIR=='')
+   {$__RDOCROOT='./';$__CURDIR='./';}
+   else {$__RDOCROOT=preg_replace($pat,'../',$__CURDIR);$__CURDIR.="/";}
    $__SELF=$__CURDIR.$__SELF;
-   //$__RDOCROOT always contains a / at end. $__CURDIR doesn't contain a slash at end unless it's ./
+   include_once($__RDOCROOT.'essentials.php'); 
+   //$__RDOCROOT and $__CURDIR contains a / at end. It's necessary
 ?>
 ```
 
