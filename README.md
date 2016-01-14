@@ -132,7 +132,6 @@ chdir(rtrim(dirname($_SERVER['PHP_SELF']),'/'));
    {$__RDOCROOT='./';$__CURDIR='./';}
    else {$__RDOCROOT=preg_replace($pat,'../',$__CURDIR);$__CURDIR.="/";}
    $__SELF=$__CURDIR.$__SELF;
-   include_once($__RDOCROOT.'essentials.php'); 
    //$__RDOCROOT and $__CURDIR contains a / at end. It's necessary
 ?>
 ```
