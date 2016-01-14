@@ -143,14 +143,14 @@ chdir(rtrim(dirname($_SERVER['PHP_SELF']),'/'));
 All these new variables are relative paths not absolute ones.
 
 <div id="disclaimer"></div>
-##Disclaimer:
+#Disclaimer:
 
 This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the main reason I wrote this script on the first place, to do the conversion from PHP to HTML. So this may not meet the standard needs of most of the PHP web developers out there.
 
 It comes with a copy of <span class="quote">GPL v3 License</span> with no warranty of any kind, so use with care.
 
 <div id="contribute"></div>
-##Contribute:
+#Contribute:
 
 If you are a developer, you can consider contributing to this project by forking this repository and making changes for better and do a pull request, or sharing ideas and suggestions or finding bugs, anything at all, what you think will be beneficial for this project.
 
