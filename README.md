@@ -120,8 +120,7 @@ If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a pa
 
 ```
 <?php 
-error_reporting(E_ERROR | E_PARSE);
-chdir(rtrim(dirname($_SERVER['PHP_SELF']),'/')); 
+@chdir(rtrim(dirname($_SERVER['PHP_SELF']),'/')); 
 //These pieces of codes must be the top most lines of the page.
    $__CURDIR=dirname($_SERVER['PHP_SELF']);
    $__SELF=basename($_SERVER['PHP_SELF']);
