@@ -130,6 +130,7 @@ If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a pa
    if($__CURDIR=='.'||$__CURDIR=='./'||$__CURDIR=='/'||$__CURDIR=='')
    {$__RDOCROOT='./';$__CURDIR='./';}
    else {$__RDOCROOT=preg_replace($pat,'../',$__CURDIR);$__CURDIR.="/";}
+   $__CURDIR = $__RDOCROOT . $__CURDIR;
    $__SELF=$__CURDIR.$__SELF;
    //$__RDOCROOT and $__CURDIR contains a / at end. It's necessary
 ?>
