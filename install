@@ -1,5 +1,16 @@
 #!/bin/sh
-sudo cp  php2html /usr/bin/ &&
-echo "Installation Finished" ||
-echo "FAILED!!! Make sure you are running this script from the package directory."
+chkroot(){
+	if [ "$(id -u)" != "0" ]; then
+	  echo "E: root access required."
+	  exit 1
+	fi
+}
+chkroot
+if cp  php2html /usr/bin/; then
+    echo "Successfully installed in /usr/bin/php2html"
+elif cp php2html /usr/local/bin/; then
+    echo "Successfully installed in /usr/local/bin/php2html"
+else
+    echo "FAILED!!! Make sure you are running this script from the package directory."
+fi
 

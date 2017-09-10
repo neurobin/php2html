@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 
 *********************************************************************************************************
@@ -7,7 +7,7 @@ The following code is written in Python (3.4.1)
 
 *********************************************************************************************************
 
-Author: Jahidul Hamid
+Author: Md. Jahidul Hamid
 Copyright: 2015, All rights reserved
 
 *********************************************************************************************************
@@ -80,7 +80,7 @@ reserveDirectoryStructure=False
 phpCommand="php"
 
 ###
-productVersion="3.1.0"
+productVersion="3.1.1"
 
 ##
 
@@ -103,7 +103,7 @@ Version: """+productVersion+"""
 Description: PHP To HTML Converter
 Categories: Development
 Author: Neurobin
-AuthorFullName: Jahidul Hamid
+AuthorFullName: Md. Jahidul Hamid
 Lincense: GPL v3
 Bug report URL: https://github.com/neurobin/php2html/issues""")
 

@@ -1,46 +1,50 @@
 <div id="description"></div>
+
 This is a simple script/tool written in **python (3.4)** to convert PHP scripts to static HTML pages. The goal is to convert an entire PHP website residing in localhost to a static HTML website altogether. This conversion can be done on a directory containing a website as well as on a single PHP script.
 
 <div id="mechanism"></div>
-##Mechanism:
+
+## Mechanism:
 
 The system on which this tool will be run, must have PHP installed. It executes every PHP script with the system PHP (CLI) environment and parses the output to replace markups as required and produces <span class="quote">.html</span> for each <span class="quote">.php</span>.
 
 <div id="install"></div>
-##Install:
+
+## Install:
 
 The script can be run without installing if python3.4 is available:
 ```bash
 ./php2html
 ```
-###On Unix/Linux:
+### On Unix/Linux:
 
 The tool can be installed by running the install file provided, in any Linux System:
 ```bash
 chmod +x install
-./install   #Must be run within the package directory (with `./` at the beginning)
+sudo ./install   #Must be run within the package directory (with `./` at the beginning)
 ```      
 
 Or just copy the `php2html` script to `/usr/bin`
 
-###On Windows:
+### On Windows:
 
 For windows, You can rename the file with a `.py` extension and run it within python environment. Or you can use <a href="https://pypi.python.org/pypi/cx_Freeze">cxfreeze</a> to make a binary build for standalone executable. I may not provide any binary build of this tool anymore.
 
 <div id="how-to-use"></div>
+
 ##How to use:
 
 Both Windows and Linux versions of this tool can be used the same way (In windows make sure to add the executable path in the PATH environment variable). It can be run with cmd in windows and with terminal emulator in Linux.
 
 
-###Simple Usage:
+### Simple Usage:
 ```bash
 php2html phpscript.php
 php2html . destination_directory  # This will convert entire site in current directory to html
 ```
 >Always run this command from within the Document Root of your website (`public_html` or `www` or whatever it is), otherwise unexpected results might occur.
 
-###Advanced Usage: 
+### Advanced Usage: 
 
 Usage: `php2html src dest [options]`
    
@@ -104,7 +108,8 @@ php2html src.php dest -q -o -a.config  # This one takes .config as AccessFile
 ```
 
 <div id="limitations"></div>
-##Limitations:
+
+## Limitations:
 
  1. This tool only changes the relative PHP URLs to HTML URLs, no absolute URL is changed in any ways.
  2. It's recommended that you use JavaScript (`window.location.href` or such) to get the current location not PHP (`$_SERVER['PHP_SELF']`), if you are gonna use that URL in any link which you need to be converted to html link, otherwise it may produce unexpected results.
@@ -114,7 +119,8 @@ php2html src.php dest -q -o -a.config  # This one takes .config as AccessFile
 
 
 <div id="tips-and-trics"></div>
-##Tips & Trics:
+
+## Tips & Trics:
 
 If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a page, add the following lines at the top of the page:
 
@@ -143,14 +149,16 @@ If you want to use `$_SERVER['PHP_SELF']` or `$_SERVER['DOCUMENT_ROOT']` in a pa
 All these new variables are relative paths not absolute ones.
 
 <div id="disclaimer"></div>
-#Disclaimer:
+
+# Disclaimer:
 
 This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the main reason I wrote this script on the first place, to do the conversion from PHP to HTML. So this may not meet the standard needs of most of the PHP web developers out there.
 
 It comes with a copy of <span class="quote">GPL v3 License</span> with no warranty of any kind, so use with care.
 
 <div id="contribute"></div>
-#Contribute:
+
+# Contribute:
 
 If you are a developer, you can consider contributing to this project by forking this repository and making changes for better and do a pull request, or sharing ideas and suggestions or finding bugs, anything at all, what you think will be beneficial for this project.
 
