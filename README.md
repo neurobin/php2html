@@ -152,7 +152,7 @@ All these new variables are relative paths not absolute ones.
 
 # Disclaimer:
 
-This project emerged from personal needs. I like to write webpages with PHP and host most of my project related pages on github while am not particularly interested on using Jekyll. That's the main reason I wrote this script on the first place, to do the conversion from PHP to HTML. So this may not meet the standard needs of most of the PHP web developers out there.
+This project emerged from personal needs. I liked to write webpages with PHP and host most of my project related pages on github while was not particularly interested on using Jekyll. That was the reason I wrote this script in the first place, to do the conversion from PHP to HTML. So this may not meet the needs of most of the PHP web developers out there.
 
 It comes with a copy of <span class="quote">GPL v3 License</span> with no warranty of any kind, so use with care.
 
