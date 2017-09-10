@@ -32,7 +32,7 @@ For windows, You can rename the file with a `.py` extension and run it within py
 
 <div id="how-to-use"></div>
 
-##How to use:
+## How to use:
 
 Both Windows and Linux versions of this tool can be used the same way (In windows make sure to add the executable path in the PATH environment variable). It can be run with cmd in windows and with terminal emulator in Linux.
 
